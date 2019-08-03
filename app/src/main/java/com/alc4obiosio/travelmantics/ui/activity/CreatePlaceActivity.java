@@ -18,8 +18,11 @@ import com.alc4obiosio.travelmantics.ui.base.BaseActivity;
 import com.alc4obiosio.travelmantics.util.CommonUtils;
 import com.alc4obiosio.travelmantics.util.FirebaseUtil;
 import com.alc4obiosio.travelmantics.util.NavigationUtils;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -89,17 +92,38 @@ public class CreatePlaceActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMAGE_RESULT && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
-            StorageReference ref = FirebaseUtil.mStorageReference.child(imageUri.getLastPathSegment());
-            ref.putFile(imageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            final StorageReference ref = FirebaseUtil.mStorageReference.child(imageUri.getLastPathSegment());
+
+            UploadTask uploadTask = ref.putFile(imageUri);
+            uploadTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    String url = taskSnapshot.getUploadSessionUri().toString();
-                    String pictureName = taskSnapshot.getStorage().getPath();
+                    //String url = taskSnapshot.getStorage().getDownloadUrl().toString();
+                    String url = taskSnapshot.getStorage().getPath();
+//                    deal.setImageUrl(url);
                     mTravelDeal.setImageUrl(url);
-                    mTravelDeal.setImageUrl(pictureName);
-                    Timber.d("Url: " + url);
-                    Timber.d("Name" + pictureName);
-                    CommonUtils.loadGlideImage(CreatePlaceActivity.this, mPlaceImage, url);
+                    //
+                }
+            });
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        String url = downloadUri.toString();
+                        mTravelDeal.setImageUrl(url);
+                        CommonUtils.loadGlideImage(CreatePlaceActivity.this, mPlaceImage, url);
+                    }
                 }
             });
 
