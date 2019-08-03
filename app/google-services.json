@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1053788241700",
+    "firebase_url": "https://hideyhere.firebaseio.com",
+    "project_id": "hideyhere",
+    "storage_bucket": "hideyhere.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1053788241700:android:0ca098e1dca9c8d7",
+        "android_client_info": {
+          "package_name": "com.alc4obiosio.travelmantics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1053788241700-86c4t0rpv1vbsvqi8vefpdvajjf04stt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXd4cGZ0oAhntzMazunIbcR6cq2PVf7LQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1053788241700-86c4t0rpv1vbsvqi8vefpdvajjf04stt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1053788241700:android:3d0b238e10fe1aa3",
+        "android_client_info": {
+          "package_name": "com.talentbox.ideyhere"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1053788241700-86c4t0rpv1vbsvqi8vefpdvajjf04stt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXd4cGZ0oAhntzMazunIbcR6cq2PVf7LQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1053788241700-86c4t0rpv1vbsvqi8vefpdvajjf04stt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

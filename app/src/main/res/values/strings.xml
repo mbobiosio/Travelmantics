@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">TravelMantics</string>
+
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_with_email">Sign in with Email</string>
+    <string name="no_internet">No Internet!!!</string>
+    <string name="auth_failed">Oops. Login failed.</string>
+    <string name="play_error">Google Play Services error.</string>
+    <string name="sign_in_title">Sign in to your account</string>
+    <string name="create_account_title">Create New Account</string>
+    <string name="sign_in_message">You can create new places when you create an account. Please ensure to provide a valid email</string>
+    <string name="email_hint">Email Address</string>
+    <string name="password_hint">Password</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="login">Login</string>
+    <string name="create_account">Create Account</string>
+    <string name="forgot_password_title">Forgot Password?</string>
+    <string name="first_last_name">First and Last Name</string>
+    <string name="no_account_message">Don\'t have an account?</string>
+    <string name="already_created_account">Already have an account?</string>
+    <string name="login_here">Log in here</string>
+    <string name="sign_up_message">Sign Up Here</string>
+    <string name="required">Required</string>
+    <string name="place_name_hint">Place Name</string>
+    <string name="place_description_hint">Place Description</string>
+    <string name="place_price_hint">Place Price</string>
+    <string name="select_image">Select Image</string>
+    <string name="create_place">Create Place</string>
+</resources>
