@@ -1,6 +1,7 @@
 package com.alc4obiosio.travelmantics.ui.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import com.alc4obiosio.travelmantics.R;
@@ -35,7 +37,7 @@ import timber.log.Timber;
 import static com.alc4obiosio.travelmantics.util.Constants.IMAGE_RESULT;
 import static com.alc4obiosio.travelmantics.util.FirebaseUtil.databaseReference;
 
-public class CreatePlaceActivity extends BaseActivity {
+public class CreateDealActivity extends BaseActivity {
 
     @BindView(R.id.place_name)
     TextInputEditText mPlaceName;
@@ -77,6 +79,11 @@ public class CreatePlaceActivity extends BaseActivity {
             deal = new TravelDeal();
         }
         this.mTravelDeal = deal;
+
+        mPlaceName.setText(mTravelDeal.getImageName());
+        mPlaceDescription.setText(mTravelDeal.getDescription());
+        mPlacePrice.setText(mTravelDeal.getPrice());
+        CommonUtils.showImage(mPlaceImage, mTravelDeal.getImageUrl());
     }
 
     private void selectImage() {
@@ -88,47 +95,28 @@ public class CreatePlaceActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IMAGE_RESULT && resultCode == RESULT_OK) {
-            Uri imageUri = data.getData();
-            final StorageReference ref = FirebaseUtil.mStorageReference.child(imageUri.getLastPathSegment());
-
-            UploadTask uploadTask = ref.putFile(imageUri);
-            uploadTask.addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //String url = taskSnapshot.getStorage().getDownloadUrl().toString();
-                    String url = taskSnapshot.getStorage().getPath();
-//                    deal.setImageUrl(url);
-                    mTravelDeal.setImageUrl(url);
-                    //
-                }
+        if (requestCode == IMAGE_RESULT && resultCode == RESULT_OK)
+        {
+            final Uri imageUri = data.getData();
+            StorageReference reference = FirebaseUtil.mStorageReference.child("deals_image").child(imageUri.toString()+".jpg");
+            reference.putFile(imageUri).addOnSuccessListener(this, taskSnapshot -> {
+                StorageReference taskReference = taskSnapshot.getMetadata().getReference();
+                Task<Uri> uriTask = taskReference.getDownloadUrl();
+                uriTask.addOnCompleteListener(task -> {
+                    String imageUrl = task.getResult().toString();
+                    String pictureName = taskSnapshot.getStorage().getPath();
+                    mTravelDeal.setImageUrl(imageUrl);
+                    mTravelDeal.setImageName(pictureName);
+                    CommonUtils.showImage(mPlaceImage, imageUrl);
+                });
             });
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-
-                    // Continue with the task to get the download URL
-                    return ref.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Uri downloadUri = task.getResult();
-                        String url = downloadUri.toString();
-                        mTravelDeal.setImageUrl(url);
-                        CommonUtils.loadGlideImage(CreatePlaceActivity.this, mPlaceImage, url);
-                    }
-                }
-            });
-
         }
     }
+
+
 
     private void saveDeal() {
         mTravelDeal.setTitle(mPlaceName.getText().toString());
@@ -144,18 +132,13 @@ public class CreatePlaceActivity extends BaseActivity {
 
     private void deleteDeal() {
         if (mTravelDeal == null) {
-            Toast.makeText(this, "Save the deal first", Toast.LENGTH_SHORT).show();
+            showToast(getString(R.string.save_deal_warning));
             return;
         }
         mDatabaseReference.child(mTravelDeal.getId()).removeValue();
         if (mTravelDeal.getTitle() != null && !mTravelDeal.getImageUrl().isEmpty()) {
             StorageReference imageRef = FirebaseUtil.mStorageReference.child(mTravelDeal.getImageUrl());
-            imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(CreatePlaceActivity.this, "Image Deleted", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(e -> Timber.d(e.getCause()));
+            imageRef.delete().addOnSuccessListener(aVoid -> showToast(getString(R.string.image_deleted))).addOnFailureListener(e -> Timber.d(e.getCause()));
         }
     }
 
@@ -174,6 +157,7 @@ public class CreatePlaceActivity extends BaseActivity {
                 break;
             case R.id.delete:
                 deleteDeal();
+                NavigationUtils.navigateMain(this);
                 break;
         }
         return super.onOptionsItemSelected(item);

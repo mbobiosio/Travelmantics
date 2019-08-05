@@ -26,4 +26,6 @@
     <string name="place_price_hint">Place Price</string>
     <string name="select_image">Select Image</string>
     <string name="create_place">Create Place</string>
+    <string name="image_deleted">Image Deleted</string>
+    <string name="save_deal_warning">Save the deal first</string>
 </resources>

@@ -5,7 +5,9 @@ import android.os.Build;
 import android.widget.ImageView;
 
 import com.alc4obiosio.travelmantics.GlideApp;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,11 +30,25 @@ public class CommonUtils {
         if (CommonUtils.checkStringNotEmpty(url)) {
             GlideApp.with(context.getApplicationContext())
                     .load(url)
+                    .apply(new RequestOptions().override(600, 200))
                     .signature(new ObjectKey(url))
                     .dontAnimate()
                     .into(imageView);
         }
     }
+
+    public static void showImage(ImageView imageView,String url)
+    {
+        if (url != null && !url.isEmpty())
+        {
+            Picasso.get()
+                    .load(url)
+                    .resize(160, 160)
+                    .centerCrop()
+                    .into(imageView);
+        }
+    }
+
 
     public static boolean isEmailValid(String email) {
         Pattern pattern;

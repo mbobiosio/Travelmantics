@@ -15,6 +15,7 @@ import com.alc4obiosio.travelmantics.ui.adapter.PlacesAdapter;
 import com.alc4obiosio.travelmantics.ui.base.BaseActivity;
 import com.alc4obiosio.travelmantics.util.CommonUtils;
 import com.alc4obiosio.travelmantics.util.Constants;
+import com.alc4obiosio.travelmantics.util.FirebaseUtil;
 import com.alc4obiosio.travelmantics.util.NavigationUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +43,8 @@ public class MainActivity extends BaseActivity {
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    LinearLayoutManager mLayoutManager;
 
     //ImageView mImageView;
 
@@ -98,10 +101,11 @@ public class MainActivity extends BaseActivity {
         };
     }
 
-
     private void initRecycler() {
+        FirebaseUtil.firebaseRef("traveldeal");
         PlacesAdapter mAdapter = new PlacesAdapter();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -121,6 +125,12 @@ public class MainActivity extends BaseActivity {
         if (mFUser != null) {
             mFAuth.removeAuthStateListener(mAuthStateListener);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initRecycler();
     }
 
     @Override

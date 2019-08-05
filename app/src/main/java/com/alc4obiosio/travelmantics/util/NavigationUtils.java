@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.alc4obiosio.travelmantics.ui.activity.CreatePlaceActivity;
+import com.alc4obiosio.travelmantics.ui.activity.CreateDealActivity;
 import com.alc4obiosio.travelmantics.ui.activity.LoginActivity;
 import com.alc4obiosio.travelmantics.ui.activity.MainActivity;
 import com.alc4obiosio.travelmantics.ui.activity.SignUpActivity;
@@ -46,6 +46,6 @@ public class NavigationUtils {
     }
 
     public static void navigateCreatePlace(Context context) {
-        context.startActivity(new Intent(context, CreatePlaceActivity.class));
+        context.startActivity(new Intent(context, CreateDealActivity.class));
     }
 }
